@@ -20,6 +20,16 @@ ENV BASEDIR=/usr/lib/unifi \
     UNIFI_GID=999 \
     UNIFI_UID=999
 
+RUN set -ex \
+    && fetchDeps=' \
+        ca-certificates \
+        dirmngr \
+        gpg \
+        wget \
+    ' \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends $fetchDeps 
+
 RUN mkdir -p /usr/share/man/man1/ \
  && groupadd -r unifi -g $UNIFI_GID \
  && useradd --no-log-init -r -u $UNIFI_UID -g $UNIFI_GID unifi \
@@ -31,7 +41,7 @@ RUN mkdir -p /usr/share/man/man1/ \
     procps \
     libcap2-bin \
  && echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
- && curl -L -o ./unifi.deb "${PKGURL}" \
+ && curl --ignore -L -o ./unifi.deb "${PKGURL}" \
  && apt -qy install ./unifi.deb \
  && apt-get -qy purge --auto-remove \
     dirmngr \
