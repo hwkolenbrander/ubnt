@@ -5,14 +5,14 @@ MAINTAINER Harm
 
 ENV PKGURL=http://dl.ubnt.com/unifi/5.6.29/unifi_sysvinit_all.deb
 
-RUN sudo apt-get update
-RUN sudo apt-get upgrade
+RUN apt-get update
+RUN apt-get upgrade
 
-RUN sudo reboot
+RUN reboot
 
 RUN deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
-RUN sudo apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 
-RUN sudo apt-get update
-RUN sudo apt-get install unifi
+RUN apt-get update
+RUN apt-get install unifi
 
