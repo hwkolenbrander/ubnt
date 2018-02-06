@@ -16,3 +16,4 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 RUN apt-get -y update
 RUN apt-get -y install unifi
 
+EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
