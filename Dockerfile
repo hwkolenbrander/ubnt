@@ -8,7 +8,8 @@ ENV PKGURL=http://dl.ubnt.com/unifi/5.6.29/unifi_sysvinit_all.deb
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
-RUN deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti
+RUN echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" > /etc/apt/sources.list.d/ubiquiti.list
+
 RUN apt-key -y adv --keyserver keyserver.ubuntu.com --recv C0A52C50
 
 RUN apt-get -y update
