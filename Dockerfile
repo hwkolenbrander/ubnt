@@ -1,19 +1,25 @@
-FROM ubuntu:17.10
-# Making my own image based on an example of jacobalberty to know and understand what is in it.
+# build docker image to run the unifi controller
+#
+# the unifi contoller is used to admin ubunquty wifi access points
+#
+FROM ubuntu
+MAINTAINER harm
+ENV DEBIAN_FRONTEND noninteractive
 
-MAINTAINER Harm
+RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
+    touch /usr/lib/unifi/data/.unifidatadir
 
-ENV PKGURL=http://dl.ubnt.com/unifi/5.6.29/unifi_sysvinit_all.deb
+# add unifi and mongo repo
+#ADD ./100-ubnt.list /etc/apt/sources.list.d/100-ubnt.list
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
-RUN apt-get -y install dirmngr
+# add ubiquity + 10gen(mongo) repo + key
+# update then install
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 && \
+    apt-get update -q -y && \
+    apt-get install -q -y mongodb-server unifi
 
-RUN echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" > /etc/apt/sources.list.d/ubiquiti.list
-
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50
-
-RUN apt-get -y update
-RUN apt-get -y install unifi
-
-EXPOSE 6789/tcp 8080/tcp 8443/tcp 8880/tcp 8843/tcp 3478/udp
+VOLUME /usr/lib/unifi/data
+EXPOSE  8443 8880 8080 27117
+WORKDIR /usr/lib/unifi
+CMD ["java", "-Xmx256M", "-jar", "/usr/lib/unifi/lib/ace.jar", "start"]
