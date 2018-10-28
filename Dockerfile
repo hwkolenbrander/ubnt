@@ -33,7 +33,8 @@ RUN apt install jsvc libcommons-daemon-java -y
 RUN set -e
 
 RUN apt install -y libcap2
-RUN wget https://dl.ubnt.com/unifi/5.8.30/unifi_sysvinit_all.deb
+# RUN wget https://dl.ubnt.com/unifi/5.8.30/unifi_sysvinit_all.deb
+RUN wget https://dl.ubnt.com/unifi/5.9.29/unifi_sysvinit_all.deb
 RUN dpkg -i unifi_sysvinit_all.deb
 RUN rm ./unifi_sysvinit_all.deb
 # RUN service unifi start
