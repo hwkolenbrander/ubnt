@@ -2,23 +2,52 @@
 #
 # the unifi contoller is used to admin ubunquty wifi access points
 #
-FROM ubuntu
+#Use Ubuntu 16.4 == xenial
+FROM ubuntu:bionic
 MAINTAINER harm
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
+# Install MongoDB
+RUN apt update; apt upgrade -y; apt dist-upgrade -y; apt autoremove -y; apt autoclean -y; apt install -y software-properties-common; apt install -y curl; apt install -y wget
+
+RUN echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+RUN codename=xenial; mongodb=3.4; wget -qO- https://www.mongodb.org/static/pgp/server-${mongodb}.asc | apt-key add
+RUN apt update
+RUN apt install -y mongodb-org
+
+# Install Java
+RUN add-apt-repository ppa:webupd8team/java -y
+RUN apt update
+RUN echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+RUN apt install oracle-java8-installer -y
+RUN apt install oracle-java8-set-default -y
+RUN echo "JAVA_HOME="/usr/lib/jvm/java-8-oracle"" >> /etc/environment
+# RUN source /etc/environment
+
+RUN set +e
+RUN apt update
+RUN apt install jsvc libcommons-daemon-java -y
+RUN set -e
+
+RUN apt install -y libcap2
+RUN wget https://dl.ubnt.com/unifi/5.8.30/unifi_sysvinit_all.deb
+RUN dpkg -i unifi_sysvinit_all.deb
+RUN rm ./unifi_sysvinit_all.deb
+# RUN service unifi start
+
 # add unifi and mongo repo
 #ADD ./100-ubnt.list /etc/apt/sources.list.d/100-ubnt.list
-RUN echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" > /etc/apt/sources.list.d/100-ubnt.list
+# RUN echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" > /etc/apt/sources.list.d/100-ubnt.list
 
 # add ubiquity + 10gen(mongo) repo + key
 # update then install
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 && \
-    apt-get update -q -y && \
-    apt-get install -q -y mongodb-server unifi
+#RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
+#    apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 && \
+#    apt-get update -q -y && \
+#    apt-get install -q -y mongodb-server unifi
 
 VOLUME /usr/lib/unifi/data
 EXPOSE  8443 8880 8080 27117 3478/udp 10001/udp
