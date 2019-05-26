@@ -21,7 +21,7 @@ RUN apt install -y mongodb-org
 # Install Azul OpenJDK Java version 11
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 RUN apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main'
-RUN apt install zulu-11 -y
+RUN apt install zulu-8 -y
 RUN echo "JAVA_HOME="/usr/lib/jvm/zulu-11"" >> /etc/environment
 
 # RUN source /etc/environment
@@ -32,8 +32,7 @@ RUN apt install jsvc libcommons-daemon-java -y
 RUN set -e
 
 RUN apt install -y libcap2
-# RUN wget https://dl.ubnt.com/unifi/5.8.30/unifi_sysvinit_all.deb
-RUN wget https://dl.ubnt.com/unifi/5.10.24/unifi_sysvinit_all.deb
+RUN wget https://dl.ui.com/unifi/5.10.24-fc15f0fdf1/unifi_sysvinit_all.deb
 RUN dpkg -i unifi_sysvinit_all.deb
 RUN rm ./unifi_sysvinit_all.deb
 # RUN service unifi start
