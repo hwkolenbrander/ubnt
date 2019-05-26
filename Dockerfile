@@ -18,6 +18,9 @@ RUN codename=xenial; mongodb=3.4; wget -qO- https://www.mongodb.org/static/pgp/s
 RUN apt update
 RUN apt install -y mongodb-org
 
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install binutils
+
 # Install Azul OpenJDK Java version 11
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 RUN apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main'
