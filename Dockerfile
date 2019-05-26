@@ -18,13 +18,12 @@ RUN codename=xenial; mongodb=3.4; wget -qO- https://www.mongodb.org/static/pgp/s
 RUN apt update
 RUN apt install -y mongodb-org
 
-# Install Java
-RUN add-apt-repository ppa:webupd8team/java -y
-RUN apt update
-RUN echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
-RUN apt install oracle-java8-installer -y
-RUN apt install oracle-java8-set-default -y
-RUN echo "JAVA_HOME="/usr/lib/jvm/java-8-oracle"" >> /etc/environment
+# Install Azul OpenJDK Java version 11
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
+RUN apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main'
+RUN apt install zulu-11 -y
+RUN echo "JAVA_HOME="/usr/lib/jvm/zulu-11" >> /etc/environment
+
 # RUN source /etc/environment
 
 RUN set +e
