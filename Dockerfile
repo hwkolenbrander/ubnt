@@ -22,7 +22,7 @@ RUN apt install -y mongodb-org
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
 RUN apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main'
 RUN apt install zulu-11 -y
-RUN echo "JAVA_HOME="/usr/lib/jvm/zulu-11" >> /etc/environment
+RUN echo "JAVA_HOME="/usr/lib/jvm/zulu-11"" >> /etc/environment
 
 # RUN source /etc/environment
 
