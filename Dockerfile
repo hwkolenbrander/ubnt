@@ -11,7 +11,7 @@ RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
-RUN apt-get install binutils
+RUN apt-get install -y --no-install-recommends binutils
 
 # Install MongoDB
 RUN apt update; apt upgrade -y; apt dist-upgrade -y; apt autoremove -y; apt autoclean -y; apt install -y software-properties-common; apt install -y curl; apt install -y wget
