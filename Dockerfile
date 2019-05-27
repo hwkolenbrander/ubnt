@@ -10,6 +10,9 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install binutils
+
 # Install MongoDB
 RUN apt update; apt upgrade -y; apt dist-upgrade -y; apt autoremove -y; apt autoclean -y; apt install -y software-properties-common; apt install -y curl; apt install -y wget
 
@@ -17,9 +20,6 @@ RUN echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiver
 RUN codename=xenial; mongodb=3.4; wget -qO- https://www.mongodb.org/static/pgp/server-${mongodb}.asc | apt-key add
 RUN apt update
 RUN apt install -y mongodb-org
-
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
-RUN apt-get install binutils
 
 # Install Azul OpenJDK Java version 11
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
