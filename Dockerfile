@@ -10,6 +10,9 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+RUN apt-get install -y --no-install-recommends binutils
+
 # Install MongoDB
 RUN apt update; apt upgrade -y; apt dist-upgrade -y; apt autoremove -y; apt autoclean -y; apt install -y software-properties-common; apt install -y curl; apt install -y wget
 
@@ -18,13 +21,12 @@ RUN codename=xenial; mongodb=3.4; wget -qO- https://www.mongodb.org/static/pgp/s
 RUN apt update
 RUN apt install -y mongodb-org
 
-# Install Java
-RUN add-apt-repository ppa:webupd8team/java -y
-RUN apt update
-RUN echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
-RUN apt install oracle-java8-installer -y
-RUN apt install oracle-java8-set-default -y
-RUN echo "JAVA_HOME="/usr/lib/jvm/java-8-oracle"" >> /etc/environment
+# Install Azul OpenJDK Java version 11
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9
+RUN apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main'
+RUN apt install zulu-8 -y
+RUN echo "JAVA_HOME="/usr/lib/jvm/zulu-11"" >> /etc/environment
+
 # RUN source /etc/environment
 
 RUN set +e
@@ -33,8 +35,7 @@ RUN apt install jsvc libcommons-daemon-java -y
 RUN set -e
 
 RUN apt install -y libcap2
-# RUN wget https://dl.ubnt.com/unifi/5.8.30/unifi_sysvinit_all.deb
-RUN wget https://dl.ubnt.com/unifi/5.10.24/unifi_sysvinit_all.deb
+RUN wget https://dl.ui.com/unifi/5.10.24-fc15f0fdf1/unifi_sysvinit_all.deb
 RUN dpkg -i unifi_sysvinit_all.deb
 RUN rm ./unifi_sysvinit_all.deb
 # RUN service unifi start
